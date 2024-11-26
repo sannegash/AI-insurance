@@ -82,11 +82,12 @@ WSGI_APPLICATION = 'AI.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ai_insurance',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'insurance',
         'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': '1QAZ2wsx@'
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'PORT': '5432'
     }
 }
 
