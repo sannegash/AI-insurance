@@ -40,7 +40,7 @@ class NewCustomer(models.Model):
 
 class Underwriter(models.Model):
     # linked using the one to one of the user model
-    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='underwriters')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='underwriters')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -49,7 +49,7 @@ class Underwriter(models.Model):
 
 class Cashier(models.Model):
     # linked using the one to one of the user model
-    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='cashiers')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cashiers')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -58,7 +58,7 @@ class Cashier(models.Model):
 
 class ClaimOfficer(models.Model):
     # linked using the one to one of the user model
-    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='claim_officer')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='claim_officer')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
