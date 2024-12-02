@@ -1,36 +1,12 @@
 from django.db import models
-
+from core.models import User 
 from django.db import models
-
-
-# Create your models here
-class User(models.Model):
-    # First signup user before onboarded as a customer
-    # Boiler plate data
-    user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=150, unique=True)
-    role = models.CharField(max_length=50)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=255, unique=True)
-
-    ### need to setup a type of system to preview the status of the user and how to flip to the new cutoemr page
-    def __str__(self):
-        return f"{self.first_name} {self.last_name} ({self.username})"
-
-    class Meta:
-        db_table = 'user'
-        ordering = ['last_name', 'first_name']
-
-
 
 class NewCustomer(models.Model):
     # User who is filling out the form (link to the existing User model)
-    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='new_customer')
-
     # Personal Information
     age = models.IntegerField()  # Age of the customer
-    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female'), ('Other', 'Other')])
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])
     driving_experience = models.IntegerField()  # Years of driving experience
     education = models.CharField(max_length=100)  # Education level (e.g., High School, Bachelor's, etc.)
     income = models.DecimalField(max_digits=10, decimal_places=2)  # Income, stored as a decimal (e.g., $50,000.00)
@@ -60,10 +36,11 @@ class NewCustomer(models.Model):
         verbose_name = 'New Customer'
         verbose_name_plural = 'New Customers'
 
+# Create your models here
 
 class Underwriter(models.Model):
-    # linked using the foriegn key of the user model
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='underwriters')
+    # linked using the one to one of the user model
+    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='underwriters')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -71,8 +48,8 @@ class Underwriter(models.Model):
 
 
 class Cashier(models.Model):
-    # linked using the foriegn key of the user model
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cashiers')
+    # linked using the one to one of the user model
+    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='cashiers')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -80,8 +57,8 @@ class Cashier(models.Model):
 
 
 class ClaimOfficer(models.Model):
-    # linked using the foriegn key of the user model
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='claim_officer')
+    # linked using the one to one of the user model
+    user = models.OnetToOneField(User, on_delete=models.CASCADE, related_name='claim_officer')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

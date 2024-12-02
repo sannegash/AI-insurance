@@ -14,6 +14,21 @@ def validate_birth_date(value):
 
 
 class User(AbstractUser):
+    # First signup user before onboarded as a customer
+    # Boiler plate data
+    user_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=True)
     birth_date = models.DateField(validators=[validate_birth_date], null=True)
-    email = models.EmailField(unique=True)
+    role = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField(max_length=255, unique=True)
+
+    ### need to setup a type of system to preview the status of the user and how to flip to the new cutoemr page
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} ({self.username})"
+
+    class Meta:
+        db_table = 'user'
+        ordering = ['last_name', 'first_name']
 
