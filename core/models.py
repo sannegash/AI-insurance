@@ -16,7 +16,6 @@ def validate_birth_date(value):
 class User(AbstractUser):
     # First signup user before onboarded as a customer
     # Boiler plate data
-    user_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=150, unique=True)
     birth_date = models.DateField(validators=[validate_birth_date], null=True)
     role = models.CharField(max_length=50)

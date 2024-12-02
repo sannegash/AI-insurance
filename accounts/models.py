@@ -3,8 +3,8 @@ from core.models import User
 from django.db import models
 
 class NewCustomer(models.Model):
-    # User who is filling out the form (link to the existing User model)
     # Personal Information
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='newcustomer')
     age = models.IntegerField()  # Age of the customer
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])
     driving_experience = models.IntegerField()  # Years of driving experience
