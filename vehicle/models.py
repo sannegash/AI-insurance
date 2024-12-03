@@ -35,6 +35,7 @@ class Vehicle(models.Model):
 
 class Driver(models.Model):
     #Driver may be employer of the insured so need to figure out logic !!
+     vehicle = models.OneToOneField(Vehicle, on delete=models.CASCADE, related_name = "driver")
      driver_firstname = models.CharField(max_length=100, help_text = " first name of driver ")
      driver_lastname = models.CharField(max_length=100, help_text = " last name of driver ")
      licence_number = models.CharField(max_length=15, unique=True, help_text = "drivers licence number")
