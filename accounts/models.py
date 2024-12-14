@@ -63,3 +63,4 @@ class ClaimOfficer(models.Model):
 
     def __str__(self):
         return f"Claim Officer: {self.user.username}"
+
