@@ -63,4 +63,12 @@ class ClaimOfficer(models.Model):
 
     def __str__(self):
         return f"Claim Officer: {self.user.username}"
+ 
+class InsuredCustomer(models.Model):
+    #model for referenceing the newcutomer data rather than duplicating
+    newcutomer = model.ForeignKey(
+        newcustomer, on_delete=models.CASCADE, related_name="insuredcustomer"
+    )
 
+    def __str__(self):
+        return f"{self.newcustomer.user.username} - Insured"
