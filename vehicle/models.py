@@ -38,7 +38,7 @@ class Driver(models.Model):
      vehicle = models.OneToOneField(Vehicle, on_delete=models.CASCADE, related_name = "driver")
      driver_firstname = models.CharField(max_length=100, help_text = " first name of driver ")
      driver_lastname = models.CharField(max_length=100, help_text = " last name of driver ")
-     driver_licence_number = models.CharField(max_length=15, unique=True, help_text = "drivers licence number")
+     licence_number = models.CharField(max_length=15, unique=True, help_text = "drivers licence number")
 
 
 

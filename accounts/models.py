@@ -66,8 +66,8 @@ class ClaimOfficer(models.Model):
  
 class InsuredCustomer(models.Model):
     #model for referenceing the newcutomer data rather than duplicating
-    newcutomer = model.ForeignKey(
-        newcustomer, on_delete=models.CASCADE, related_name="insuredcustomer"
+    newcutomer = models.ForeignKey(
+        NewCustomer, on_delete=models.CASCADE, related_name="insuredcustomer"
     )
 
     def __str__(self):
