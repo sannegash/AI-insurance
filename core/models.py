@@ -29,7 +29,12 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=255, unique=True)
 
+    # Address and Location
+    postal_code = models.CharField(max_length=20)  # Postal code
+    city = models.CharField(max_length=100)  # City
+    state = models.CharField(max_length=100)  # State/Province
     ### need to setup a type of system to preview the status of the user and how to flip to the new cutoemr page
+    
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.username})"
 
