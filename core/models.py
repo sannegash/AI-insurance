@@ -29,6 +29,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=255, unique=True)
 
+    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])
     # Address and Location
     postal_code = models.CharField(max_length=20)  # Postal code
     city = models.CharField(max_length=100)  # City
