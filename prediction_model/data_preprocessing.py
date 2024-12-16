@@ -5,13 +5,20 @@ from sklearn.preprocessing import StandardScaler
 def preprocess_data(file_path):
     # Load CSV file
     data = pd.read_csv(file_path)
-
+    #check for missing values and handle them 
+    if data.isnull().sum().any():
+        data = data.fillna(0)
+        
     # Separate features and targets
     X = data[['age', 'gender', 'driving_experience', 'education','income', 'vehicle_type', 'married', 'children','traffic_violations', 'number_of_accidents']]
     y_risk = data['risk_factor']  # Target for risk classification
     y_claim = data['claim_likelihood']  # Target for claim regression
 
     # Encode categorical data (e.g., vehicle, education)
+    X.loc[:, 'gender'] = X['gender'].map({'Male': 0, 'Female': 1})
+    X.loc[:, 'married'] = X['married'].map({'Yes': 1, 'No': 0})
+
+    #one-hot encode multi-class categorical features 
     X = pd.get_dummies(X, columns=['vehicle_type', 'education'], drop_first=True)
 
     # Split into train and test sets
@@ -27,6 +34,9 @@ def preprocess_data(file_path):
 
 if __name__ == "__main__":
     file_path = "synthetic_insurance_data.csv"  # Update with your CSV path
-    data = preprocess_data(file_path)
-    print("Data preprocessing complete!")
+    try: 
+        data = preprocess_data(file_path)
+        print("Data preprocessing complete!")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
