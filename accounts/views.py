@@ -1,15 +1,24 @@
+from rest_framework import viewsets
 from django.shortcuts import render
 from rest_framework import generics
-from .serializers import CustomerSignupSerializer
+from .models import NewCustomer, Underwriter, Cashier, ClaimOfficer
+from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
 
-class StaffSignView(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = StaffSignupSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'message'; 'Signup successful'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class NewCustomerViewSet(viewsets.ModelViewSet):
+    queryset = NewCustomer.objects.all()
+    serializer_class = NewCustomerSerializer
 
-class CustomerSignupView(generics.CreateAPTView):
-    serializer_class = CustomerSignupSerializer
+class UnderwriterViewSet(viewsets.ModelViewSet):
+    queryset = Underwriter.objects.all()
+    serializer_class = UnderwriterSerializer
+
+class CashierViewSet(viewsets.ModelViewSet):
+    queryset = Cashier.objects.all()
+    serializer_class = CashierSerializer
+
+class ClaimOfficerViewSet(viewsets.ModelViewSet):
+    queryset = ClaimOfficer.objects.all()
+    serializer_class = ClaimOfficerSerializer
