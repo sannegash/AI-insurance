@@ -6,7 +6,6 @@ class NewCustomer(models.Model):
     # Personal Information
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='newcustomer')
     age = models.IntegerField()  # Age of the customer
-    gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])
     driving_experience = models.IntegerField()  # Years of driving experience
     education = models.CharField(max_length=100)  # Education level (e.g., High School, Bachelor's, etc.)
     income = models.DecimalField(max_digits=10, decimal_places=2)  # Income, stored as a decimal (e.g., $50,000.00)
@@ -16,11 +15,7 @@ class NewCustomer(models.Model):
     married = models.BooleanField()  # Whether the customer is married or not
     children = models.IntegerField()  # Number of children, 0 if none
 
-    # Address and Location
-    postal_code = models.CharField(max_length=20)  # Postal code
-    city = models.CharField(max_length=100)  # City
-    state = models.CharField(max_length=100)  # State/Province
-
+    
     # Traffic-related Information
     traffic_violations = models.IntegerField()  # Number of traffic violations within the last year
     number_of_accidents = models.IntegerField()  # Number of accidents in the past
@@ -64,11 +59,3 @@ class ClaimOfficer(models.Model):
     def __str__(self):
         return f"Claim Officer: {self.user.username}"
  
-class InsuredCustomer(models.Model):
-    #model for referenceing the newcutomer data rather than duplicating
-    newcutomer = models.ForeignKey(
-        NewCustomer, on_delete=models.CASCADE, related_name="insuredcustomer"
-    )
-
-    def __str__(self):
-        return f"{self.newcustomer.user.username} - Insured"

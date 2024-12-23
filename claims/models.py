@@ -7,6 +7,7 @@ from core.models import User
 from accounts.models import InsuredCustomer
 
 class Claim(models.Model):
+    
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('Approved', 'Approved'),
