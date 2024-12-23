@@ -4,8 +4,7 @@ from django.db import models
 from vehicle.models import Vehicle
 from django.contrib.auth import get_user_model
 from core.models import User
-from accounts.models import InsuredCustomer
-
+from accounts.models import NewCustomer
 class Claim(models.Model):
     
     STATUS_CHOICES = [
@@ -16,7 +15,7 @@ class Claim(models.Model):
     ]
 
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='claims')
-    claimant = models.ForeignKey(InsuredCustomer, on_delete=models.CASCADE, related_name='claims')
+    claimant = models.ForeignKey(NewCustomer, on_delete=models.CASCADE, related_name='claims')
     claim_date = models.DateField(auto_now_add=True)
     accident_date = models.DateField(help_text="Date of the accident.")
     accident_location = models.CharField(max_length=200, help_text="Where the accident occurred.")

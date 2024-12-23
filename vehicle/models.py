@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.db import models
-
+from accounts.models import NewCustomer
 
 class Vehicle(models.Model):
     FUEL_TYPE_CHOICES = [
@@ -15,7 +15,7 @@ class Vehicle(models.Model):
         ('Manual', 'Manual'),
         ('Automatic', 'Automatic'),
     ]
-
+    customer = models.ForeignKey(NewCustomer, on_delete=models.CASCADE, related_name="Vehicle")
     registration_number = models.CharField(max_length=15, unique=True, help_text="Unique vehicle registration number.")
     owner_name = models.CharField(max_length=100, help_text="Name of the vehicle owner.")
     vehicle_make = models.CharField(max_length=50, help_text="Brand of the vehicle (e.g., Toyota).")

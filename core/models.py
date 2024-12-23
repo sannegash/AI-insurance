@@ -16,13 +16,20 @@ def validate_birth_date(value):
 class User(AbstractUser):
     # First signup user before onboarded as a customer
     # Boiler plate data
+    CASHIER = "cashier"
+    CLAIM_OFFICER = "claim_officer"
+    UNDERWRITER = "underwriter"
+    NEW_CUSTOMER = "new_customer"
+    INSURED_CUSTOMER = "insured_customer"
+
     ROLE_CHOICES = [
-        (CASHIER, "Cashier")
+        (CASHIER, "Cashier"),
         (CLAIM_OFFICER, "Claim Officer"),
         (UNDERWRITER, "Underwriter"),
         (NEW_CUSTOMER, "New Customer"),  
         (INSURED_CUSTOMER, "Insured Customer"),
     ]
+
     username = models.CharField(max_length=150, unique=True)
     birth_date = models.DateField(validators=[validate_birth_date], null=True)
     role = models.CharField(max_length=50)
