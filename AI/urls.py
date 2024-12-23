@@ -24,6 +24,8 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('claims/', include('claims.urls')),
     path('policies/', include('policies.urls')),
+    path('risk/', include('risk.urls')),
+    path('vehicle/', include('vehicle.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
 ]
