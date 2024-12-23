@@ -5,7 +5,7 @@ from accounts.models import NewCustomer
 User = get_user_model()
 
 
-class InsurancePolicy(models.Model):
+class Policy(models.Model):
     POLICY_TYPE_CHOICES = [
         ('Comprehensive', 'Comprehensive'),
         ('Third-Party', 'Third-Party'),

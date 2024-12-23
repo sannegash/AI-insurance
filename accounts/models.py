@@ -11,7 +11,6 @@ class NewCustomer(models.Model):
     income = models.DecimalField(max_digits=10, decimal_places=2)  # Income, stored as a decimal (e.g., $50,000.00)
 
     # Vehicle-related Information
-    vehicle = models.CharField(max_length=100)  # Vehicle make/model or type
     married = models.BooleanField()  # Whether the customer is married or not
     children = models.IntegerField()  # Number of children, 0 if none
 

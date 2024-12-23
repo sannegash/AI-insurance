@@ -3,9 +3,7 @@ from django.shortcuts import render
 from rest_framework import generics
 from .models import NewCustomer, Underwriter, Cashier, ClaimOfficer
 from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer
-from rest_framework.routers import DefaultRouter
 
-router = DefaultRouter()
 
 class NewCustomerViewSet(viewsets.ModelViewSet):
     queryset = NewCustomer.objects.all()
