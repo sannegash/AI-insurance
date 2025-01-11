@@ -10,4 +10,6 @@ router.register(r'claim',ClaimViewSet)
 urlpatterns = [
     path('api/', include(router.urls)),
     path('verify-claim/<int:claim_id>/', views.verify_claim, name='verify_claim'),
+    path('approve-or-deny-claim/<int:claim_id>/', views.approve_or_deny_claim, name='approve_or_deny_claim'),
 ]
+

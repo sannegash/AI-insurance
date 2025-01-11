@@ -73,3 +73,39 @@ def verify_claim(request, claim_id):
     claim.save()
 
     return Response({'message': 'Claim verified successfully'}, status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def approve_or_deny_claim(request, claim_id):
+    """Allow claim officer to approve or deny the underwriter's claim estimate"""
+
+    try:
+        claim = Claim.objects.get(id=claim_id)
+    except Claim.DoesNotExist:
+        return Response({'error': 'Claim not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Check if the user is a claim officer
+    if not request.user.groups.filter(name='Claim Officer').exists():
+        raise PermissionDenied("You do not have permission to approve or deny claims.")
+    
+    # Check if the claim is in the 'Pending' status and the estimated damage cost is provided
+    if claim.status != 'Pending' or claim.estimated_damage_cost is None:
+        return Response({'error': 'This claim has either been already processed or is missing the estimated damage cost.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get the action (approve or deny) from the request data
+    action = request.data.get('action')
+
+    if action not in ['approve', 'deny']:
+        return Response({'error': 'Action must be either "approve" or "deny".'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if action == 'approve':
+        # Set the claim status to 'Approved'
+        claim.status = 'Approved'
+        claim.save()
+        return Response({'message': 'Claim approved successfully.'}, status=status.HTTP_200_OK)
+
+    if action == 'deny':
+        # Set the claim status to 'Rejected'
+        claim.status = 'Rejected'
+        claim.save()
+        return Response({'message': 'Claim rejected successfully.'}, status=status.HTTP_200_OK)
