@@ -11,4 +11,5 @@ router.register(r'claimofficers', ClaimOfficerViewSet)
 
 urlpatterns = [
     path('api/', include(router.urls)),
+    path('verify-new-customer/<int:customer_id>/', views.verify_new_customer, name='verify_new_customer'),
 ]

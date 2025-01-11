@@ -27,5 +27,5 @@ urlpatterns = [
     path('risk/', include('risk.urls')),
     path('vehicle/', include('vehicle.urls')),
     path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
+    path('auth/jwt/', include('djoser.urls.jwt')),
 ]

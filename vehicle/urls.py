@@ -7,6 +7,7 @@ router = DefaultRouter()
 
 router.register(r'vehicle',VehicleViewSet)
 router.register(r'Driver',DriverViewSet)
+
 urlpatterns = [
     path('api/', include(router.urls)),
 ]

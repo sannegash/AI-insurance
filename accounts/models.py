@@ -4,6 +4,11 @@ from django.db import models
 
 class NewCustomer(models.Model):
     # Personal Information
+    STATUS_CHOICES = [
+        ('New', 'New'),
+        ('Insured', 'Insured'),
+        ('Rejected', 'Rejected'),
+    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='newcustomer')
     age = models.IntegerField()  # Age of the customer
     driving_experience = models.IntegerField()  # Years of driving experience
