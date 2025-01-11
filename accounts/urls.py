@@ -1,9 +1,9 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import NewCustomerViewSet, UnderwriterViewSet, CashierViewSet, ClaimOfficerViewSet
+from . import views
 
 router = DefaultRouter()
-
 router.register(r'newcustomers', NewCustomerViewSet)
 router.register(r'underwriters', UnderwriterViewSet)
 router.register(r'cashiers', CashierViewSet)
