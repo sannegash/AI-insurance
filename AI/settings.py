@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
+    'django_chapa',
     'core',
     'rest_framework',
     'djoser',
@@ -48,6 +49,11 @@ INSTALLED_APPS = [
     'risk',
    
 ]
+CHAPA_SECRET = "Secret"
+
+CHAPA_API_URL = ''
+
+CHAPA_API_VERSION = 'v1'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

@@ -28,4 +28,5 @@ urlpatterns = [
     path('vehicle/', include('vehicle.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/jwt/', include('djoser.urls.jwt')),
+    path('chapa-webhook', include('django_chapa.urls'))
 ]
