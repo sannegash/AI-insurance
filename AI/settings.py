@@ -55,6 +55,8 @@ CHAPA_API_URL = ''
 
 CHAPA_API_VERSION = 'v1'
 
+CHAPA_TRANSANCTION_MODEL = 'AI-INSURANCE.chapa_model'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
