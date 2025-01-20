@@ -20,14 +20,12 @@ class User(AbstractUser):
     CLAIM_OFFICER = "claim_officer"
     UNDERWRITER = "underwriter"
     NEW_CUSTOMER = "new_customer"
-    INSURED_CUSTOMER = "insured_customer"
 
     ROLE_CHOICES = [
         (CASHIER, "Cashier"),
         (CLAIM_OFFICER, "Claim Officer"),
         (UNDERWRITER, "Underwriter"),
         (NEW_CUSTOMER, "New Customer"),  
-        (INSURED_CUSTOMER, "Insured Customer"),
     ]
 
     username = models.CharField(max_length=150, unique=True)
@@ -35,19 +33,11 @@ class User(AbstractUser):
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='new_customer')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(unique=False, max_length=255)
 
     gender = models.CharField(max_length=10, choices=[('Male', 'Male'), ('Female', 'Female')])
     # Address and Location
-    postal_code = models.CharField(max_length=20)  # Postal code
-    city = models.CharField(max_length=100)  # City
-    state = models.CharField(max_length=100)  # State/Province
     ### need to setup a type of system to preview the status of the user and how to flip to the new cutoemr page
-    status = models.CharField(
-        max_length=50,
-        choices=[(NEW_CUSTOMER, "New Customer"), (INSURED_CUSTOMER, "Insured Customer")],
-        default = NEW_CUSTOMER
-    )    
     def __str__(self):
         return f"{self.first_name} {self.last_name} ({self.username})"
 

@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'username', 'email', 'password', 'first_name', 'last_name', 
-            'birth_date', 'gender', 'postal_code', 'city', 'state', 
+            'birth_date', 'gender',  
             'role', 'status'
         ]
         extra_kwargs = {
