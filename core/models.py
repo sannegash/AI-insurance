@@ -32,7 +32,7 @@ class User(AbstractUser):
 
     username = models.CharField(max_length=150, unique=True)
     birth_date = models.DateField(validators=[validate_birth_date], null=True)
-    role = models.CharField(max_length=50)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES, default='new_customer')
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=255, unique=True)
