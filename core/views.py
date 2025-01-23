@@ -1,11 +1,14 @@
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from core.serializers import UserSerializer  # Import the UserSerializer
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import PermissionDenied
+from django.contrib.auth import authenticate, login
+from core.serializers import UserSerializer  # Import the UserSerializer
 from .models import User
+
 
 class UserSignupView(APIView):
     permission_classes = []  # Allow all users to access this endpoint
@@ -34,8 +37,8 @@ def update_user_status(request, user_id):
             return Response({'error': 'Invalid status'}, status=400)
 
         # Check if the user is in 'NEW_CUSTOMER' status and update to 'INSURED_CUSTOMER'
-        if user.status == User.NEW_CUSTOMER and new_status == User.INSURED_CUSTOMER:
-            user.status = User.INSURED_CUSTOMER
+        if user.role == User.NEW_CUSTOMER and new_status == User.INSURED_CUSTOMER:
+            user.role = User.INSURED_CUSTOMER
             user.save()
 
             # Serialize the updated user data to return
@@ -50,3 +53,40 @@ def update_user_status(request, user_id):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=404)
 
+class LoginView(APIView):
+    """
+    Handles user login by authenticating the user with username and password.
+    Returns JWT tokens (access and refresh) and user information upon successful login.
+    """
+
+    def post(self, request, *args, **kwargs):
+        # Extract username and password from request data
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        # Check if both username and password are provided
+        if not username or not password:
+            return Response({"error": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Authenticate the user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            # Create JWT tokens (access and refresh)
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)  # Access token
+            refresh_token = str(refresh)  # Refresh token
+
+            # Return the tokens and user details
+            return Response({
+                "message": "Login successful",
+                "access": access_token,  # Easier to reference as "access"
+                "refresh": refresh_token,  # Easier to reference as "refresh"
+                "user": {
+                    "username": user.username,
+                    "role": user.role,
+                }
+            }, status=status.HTTP_200_OK)
+        
+        # If authentication fails, return an error
+        return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
