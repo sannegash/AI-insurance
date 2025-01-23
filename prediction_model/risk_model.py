@@ -10,8 +10,7 @@ class RiskModel(nn.Module):
             nn.Linear(64, 32),
             nn.ReLU(),
             nn.Linear(32, output_dim)  # Output for classification (low, medium, high risk)
-    )
+        )  # Fixed: Properly close nn.Sequential
 
     def forward(self, x):
         return self.fc(x)
-
