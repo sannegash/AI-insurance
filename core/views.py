@@ -53,7 +53,7 @@ def update_user_status(request, user_id):
     except User.DoesNotExist:
         return Response({'error': 'User not found'}, status=404)
 
-class LoginView(APIView):
+class SignInView(APIView):
     """
     Handles user login by authenticating the user with username and password.
     Returns JWT tokens (access and refresh) and user information upon successful login.
@@ -70,23 +70,26 @@ class LoginView(APIView):
 
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
-        
+        print("User authenticated, generating tokens...") 
         if user is not None:
             # Create JWT tokens (access and refresh)
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)  # Access token
             refresh_token = str(refresh)  # Refresh token
 
+            # Ensure the 'role' field exists on your custom User model
+            user_data = {
+                "username": user.username,
+                "role": user.role,  # Ensure 'role' is correctly set in your custom user model
+            }
+
             # Return the tokens and user details
             return Response({
-                "message": "Login successful",
-                "access": access_token,  # Easier to reference as "access"
-                "refresh": refresh_token,  # Easier to reference as "refresh"
-                "user": {
-                    "username": user.username,
-                    "role": user.role,
-                }
+                "message": "Sign-in successful",
+                "access": access_token,
+                "refresh": refresh_token,
+                "user": user_data  # Now this will include the 'role'
             }, status=status.HTTP_200_OK)
-        
+
         # If authentication fails, return an error
         return Response({"error": "Invalid username or password"}, status=status.HTTP_401_UNAUTHORIZED)
