@@ -44,6 +44,11 @@ class NewCustomer(models.Model):
         """
         self.status = 'Insured'
         self.save()
+    def save(self, *args, **kwargs):
+        if self.user.birth_date:
+            today = date.today()
+            self.age = today.year - self.user.birth_date.year - ((today.month, today.day) < (self.user.birth_date.month, self.user.birth_date.day))
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name} - New Customer Info"

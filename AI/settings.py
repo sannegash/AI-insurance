@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'djoser',
     'claims',
     'policies',
+    'payment',
     'accounts',
     'vehicle',
     'risk',
