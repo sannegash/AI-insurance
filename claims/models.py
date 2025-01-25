@@ -20,7 +20,8 @@ class Claim(models.Model):
     accident_date = models.DateField(help_text="Date of the accident.")
     accident_location = models.CharField(max_length=200, help_text="Where the accident occurred.")
     description = models.TextField(help_text="Detailed description of the accident and claim.")
-    estimated_damage_cost = models.DecimalField(max_digits=10, decimal_places=2, help_text="Estimated cost of damages.")
+    settlement_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True,
+                                            help_text="Amount for settlement approved by claim officer.")
     police_report_number = models.CharField(max_length=50, null=True, blank=True,
                                             help_text="Police report reference, if applicable.")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')

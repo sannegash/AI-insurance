@@ -2,9 +2,8 @@ import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from django.shortcuts import render
 
-class TransferView(View):
+class MakePaymentView(View):
     @csrf_exempt
     def post(self, request):
         try:
@@ -32,7 +31,7 @@ class TransferView(View):
 
             # Chapa secret key
             headers = {
-                'Authorization': 'CHASECK_TEST-6mr7kFSyGCl3vrkhxnIvev0hbfu8gGEi',  # Replace with your actual secret key
+                'Authorization': 'CHAPUBK_TEST-uwf74g2tdYC7RMNF3F5RTcioNCtbOwKH',  # Replace with your actual secret key
                 'Content-Type': 'application/json'
             }
 

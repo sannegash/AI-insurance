@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import TransferView
+from .views import MakePaymentView
 
 urlpatterns = [
-    path('initiate-transfer/', TransferView.as_view(), name='initiate-transfer'),
+    path('make-payment/', MakePaymentView.as_view(), name='make-payment'),
 ]
