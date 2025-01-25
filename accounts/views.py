@@ -7,7 +7,8 @@ from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import render
 from rest_framework import generics
 from .models import NewCustomer, Underwriter, Cashier, ClaimOfficer
-from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer
+from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer, CombinedCustomerDataSerializer
+from rest_framework.views import APIView
 
 
 class NewCustomerViewSet(viewsets.ModelViewSet):
@@ -17,6 +18,16 @@ class NewCustomerViewSet(viewsets.ModelViewSet):
 class UnderwriterViewSet(viewsets.ModelViewSet):
     queryset = Underwriter.objects.all()
     serializer_class = UnderwriterSerializer
+
+class SubmitCustomerDataAPIView(APIView):
+    def post(self, request):
+        serializer = CombinedCustomerDataSerializer(data=request.data)
+
+        if serializer.is_valid():
+            # Save the data to the models
+            serializer.save()
+            return Response({"message": "Customer data successfully submitted!"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
