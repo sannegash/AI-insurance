@@ -1,6 +1,7 @@
 from django.db import models
 from core.models import User 
 from django.utils import timezone
+from datetime import date
 
 class NewCustomer(models.Model):
     # Personal Information
@@ -14,8 +15,10 @@ class NewCustomer(models.Model):
     age = models.IntegerField()  # Age of the customer
     driving_experience = models.IntegerField()  # Years of driving experience
     education = models.CharField(max_length=100)  # Education level (e.g., High School, Bachelor's, etc.)
-    income = models.DecimalField(max_digits=10, decimal_places=2)  # Income, stored as a decimal (e.g., $50,000.00)
+    income = models.DecimalField(max_digits=100, decimal_places=2)  # Income, stored as a decimal (e.g., $50,000.00)
 
+    owner_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
     postal_code = models.CharField(max_length=20)  # Postal code
     city = models.CharField(max_length=100)  # City
     state = models.CharField(max_length=100)  # State/Province
@@ -27,7 +30,10 @@ class NewCustomer(models.Model):
     # Traffic-related Information
     traffic_violations = models.IntegerField()  # Number of traffic violations within the last year
     number_of_accidents = models.IntegerField()  # Number of accidents in the past
-    
+
+    vehicles = models.ForeignKey('vehicle.Vehicle', related_name='customers', on_delete=models.CASCADE, null=True)
+    drivers = models.ForeignKey('vehicle.Driver', related_name='driver', on_delete=models.CASCADE, null=True)
+
     # Timestamp of form submission
     created_at = models.DateTimeField(auto_now_add=True)  # Time when the customer filled out the form
 

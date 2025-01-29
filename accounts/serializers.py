@@ -4,18 +4,22 @@ from rest_framework import serializers
 from core.models import User
 from .models import NewCustomer, Underwriter, Cashier, ClaimOfficer
 from vehicle.models import Vehicle, Driver
+from vehicle.serializers import VehicleSerializer, DriverSerializer
+from core.serializers import UserSerializer
+ 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'gender', 'postal_code', 'city', 'state', 'status']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'gender', 'role',]
 
 
 class NewCustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
+    Vehicle = VehicleSerializer(many=True)  # Include vehicles (many-to-many relationship)
 
     class Meta:
         model = NewCustomer
-        fields = ['user', 'age','driving_experience', 'education', 'income', 'married', 'children', 'traffic_violations', 'number_of_accidents','created_at']    
+        fields = ['user', 'age','driving_experience', 'education', 'income','owner_name', 'phone_number', 'postal_code','city', 'state','married', 'children', 'traffic_violations', 'number_of_accidents','created_at','Vehicle', ]    
     
     def create(self, validated_data):
         #Handle creation of new customer instance 
@@ -25,65 +29,27 @@ class NewCustomerSerializer(serializers.ModelSerializer):
         return new_customer
 
 class CombinedCustomerDataSerializer(serializers.Serializer):
-    # Personal info (from the Account model)
+    chassis_number = serializers.CharField(max_length=255)
     owner_name = serializers.CharField(max_length=255)
-    driving_experience = serializers.IntegerField()
-    education = serializers.CharField(max_length=255)
-    income = serializers.DecimalField(max_digits=10, decimal_places=2)
-    postal_code = serializers.CharField(max_length=20)
-    city = serializers.CharField(max_length=100)
-    state = serializers.CharField(max_length=100)
-    phone_number = serializers.CharField(max_length=20)
-
-    # Vehicle info (from the Vehicle model)
-    vehicle_make = serializers.CharField(max_length=100)
-    vehicle_model = serializers.CharField(max_length=100)
+    vehicle_make = serializers.CharField(max_length=255)
     vehicle_year = serializers.IntegerField()
-    fuel_type = serializers.CharField(max_length=50)
-    transmission_type = serializers.CharField(max_length=50)
-    engine_capacity = serializers.DecimalField(max_digits=5, decimal_places=2)
-    chassis_number = serializers.CharField(max_length=50)
+    fuel_type = serializers.CharField(max_length=255)
+    transmission_type = serializers.CharField(max_length=255)
+    engine_capacity = serializers.FloatField()
+    color = serializers.CharField(max_length=255)
+    driver_firstname = serializers.CharField(max_length=255)
+    driver_lastname = serializers.CharField(max_length=255)
+    driver_license_number = serializers.CharField(max_length=255)
+    customer_id = serializers.IntegerField()  # Assuming `NewCustomer` is linked with an ID
 
-    # Driver info (from the Driver model)
-    driver_first_name = serializers.CharField(max_length=100)
-    driver_last_name = serializers.CharField(max_length=100)
-    driver_license_number = serializers.CharField(max_length=100)
+    def validate(self, data):
+        # Check if NewCustomer exists
+        if not NewCustomer.objects.filter(id=data['customer_id']).exists():
+            raise serializers.ValidationError("Customer with the given ID does not exist.")
+        return data
 
-    def create(self, validated_data):
-        # Here we save the data to the respective models
-        account_data = {
-            'owner_name': validated_data['owner_name'],
-            'driving_experience': validated_data['driving_experience'],
-            'education': validated_data['education'],
-            'income': validated_data['income'],
-            'postal_code': validated_data['postal_code'],
-            'city': validated_data['city'],
-            'state': validated_data['state'],
-            'phone_number': validated_data['phone_number'],
-        }
-        account = Account.objects.create(**account_data)
 
-        vehicle_data = {
-            'account': account,
-            'vehicle_make': validated_data['vehicle_make'],
-            'vehicle_model': validated_data['vehicle_model'],
-            'vehicle_year': validated_data['vehicle_year'],
-            'fuel_type': validated_data['fuel_type'],
-            'transmission_type': validated_data['transmission_type'],
-            'engine_capacity': validated_data['engine_capacity'],
-            'chassis_number': validated_data['chassis_number'],
-        }
-        vehicle = Vehicle.objects.create(**vehicle_data)
 
-        driver_data = {
-            'account': account,
-            'driver_first_name': validated_data['driver_first_name'],
-            'driver_last_name': validated_data['driver_last_name'],
-            'driver_license_number': validated_data['driver_license_number'],
-        }
-        driver = Driver.objects.create(**driver_data)
-
-        return account 
 
 class UnderwriterSerializer(serializers.ModelSerializer):
     user = UserSerializer()
