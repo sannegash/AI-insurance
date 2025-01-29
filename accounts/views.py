@@ -26,53 +26,27 @@ class UnderwriterViewSet(viewsets.ModelViewSet):
     queryset = Underwriter.objects.all()
     serializer_class = UnderwriterSerializer
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure the user is authenticated
+def create_new_customer(request):
+    user = request.user  # Get the logged-in user
+
+    # Check if a NewCustomer object already exists for this user
+    if NewCustomer.objects.filter(user=user).exists():
+        return Response({"error": "User already has a NewCustomer profile."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Attach the user to the request data
+    data = request.data.copy()
+    data['user'] = user.id  # Set the user ID
+
+    serializer = NewCustomerSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SubmitCustomerDataAPIView(APIView):
-    def post(self, request):
-        serializer = CombinedCustomerDataSerializer(data=request.data)
-
-        if serializer.is_valid():
-            chassis_number = serializer.validated_data.get("chassis_number")
-            username = serializer.validated_data.get("username")
-            
-            # Check if a vehicle with the given chassis number already exists
-            if Vehicle.objects.filter(chassis_number=chassis_number).exists():
-                return Response(
-                    {"message": "This vehicle has already been submitted!"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-
-            try:
-                # Get the NewCustomer instance
-                new_customer = NewCustomer.objects.get(id=customer_id)
-
-                # Create the vehicle and driver instances and link to the customer
-                vehicle = Vehicle.objects.create(
-                    chassis_number=chassis_number,
-                    owner_name=serializer.validated_data["owner_name"],
-                    vehicle_make=serializer.validated_data["vehicle_make"],
-                    vehicle_year=serializer.validated_data["vehicle_year"],
-                    fuel_type=serializer.validated_data["fuel_type"],
-                    transmission_type=serializer.validated_data["transmission_type"],
-                    engine_capacity=serializer.validated_data["engine_capacity"],
-                    color=serializer.validated_data["color"],
-                    customer=new_customer,  # Link to NewCustomer
-                )
-
-                driver = Driver.objects.create(
-                    name=serializer.validated_data["driver_name"],
-                    license_number=serializer.validated_data["driver_license_number"],
-                    vehicle=vehicle  # Link to Vehicle
-                )
-
-                return Response({"message": "Customer data successfully submitted!"}, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                # Log or print the exception for debugging
-                print(f"Error saving data: {e}")
-                return Response({"message": "An error occurred while saving data."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
