@@ -58,7 +58,7 @@ class SignInView(APIView):
     Handles user login by authenticating the user with username and password.
     Returns JWT tokens (access and refresh) and user information upon successful login.
     """
-
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         # Extract username and password from request data
         username = request.data.get('username')
