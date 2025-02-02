@@ -7,26 +7,28 @@ from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import render
 from rest_framework import generics
 from .models import NewCustomer, Underwriter, Cashier, ClaimOfficer
-from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer, CombinedCustomerDataSerializer
-from rest_framework.views import APIView
+from .serializers import  NewCustomerSerializer, UnderwriterSerializer, CashierSerializer, ClaimOfficerSerializer 
 from  vehicle.models  import Vehicle 
 from core.models import User
 
 
 class NewCustomerViewSet(viewsets.ModelViewSet):
     serializer_class = NewCustomerSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        # Filter the queryset based on the 'username' query parameter
-        queryset = NewCustomer.objects.all()
-        username = self.request.query_params.get('username', None)
-        if username:
-            queryset = queryset.filter(user__username=username)  # Filter by the username from query params
-        return queryset
+        # Fetch the logged-in user
+        user = self.request.user
+        if user.is_authenticated:
+            return NewCustomer.objects.filter(user=user)  # Return only NewCustomer related to the logged-in user
+        else:
+            return NewCustomer.objects.none()  # If no authenticated user, return an empty queryset
+
 
 class UnderwriterViewSet(viewsets.ModelViewSet):
     queryset = Underwriter.objects.all()
     serializer_class = UnderwriterSerializer
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])  # Ensure the user is authenticated

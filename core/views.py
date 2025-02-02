@@ -11,7 +11,7 @@ from .models import User
 
 
 class UserSignupView(APIView):
-    permission_classes = []  # Allow all users to access this endpoint
+    permission_classes = [AllowAny]  # Allow all users to access this endpoint
 
     def post(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)  # Use UserSerializer here
@@ -58,7 +58,7 @@ class SignInView(APIView):
     Handles user login by authenticating the user with username and password.
     Returns JWT tokens (access and refresh) and user information upon successful login.
     """
-    permission_classes = [AllowAny]
+    permission_classes = []
     def post(self, request, *args, **kwargs):
         # Extract username and password from request data
         username = request.data.get('username')
