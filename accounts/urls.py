@@ -15,6 +15,5 @@ router.register(r'claimofficers', ClaimOfficerViewSet, basename='claimofficer') 
 # Define the URL patterns
 urlpatterns = [
     path('api/', include(router.urls)),  # Include the router URLs
-    path('newcustomers/', views.create_new_customer, name='create_new_customer'),
     path('verify-new-customer/<int:customer_id>/', views.verify_new_customer, name='verify_new_customer'),
 ]

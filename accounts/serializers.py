@@ -47,9 +47,6 @@ class CombinedCustomerDataSerializer(serializers.Serializer):
             raise serializers.ValidationError("Customer with the given ID does not exist.")
         return data
 
-
-
-
 class UnderwriterSerializer(serializers.ModelSerializer):
     user = UserSerializer()
 
