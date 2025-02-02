@@ -22,10 +22,11 @@ class NewCustomerSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         # Step 1: Get the existing User instance
-        user = validated_data.pop('user')  # Assuming 'user' is passed as part of validated_data
+        user = self.context['request'].user  # Assuming 'user' is passed as part of validated_data
+        validated_data['user'] = user
         
         # Step 2: Create a NewCustomer instance and attach it to the existing user
-        new_customer = NewCustomer.objects.create(user=user, **validated_data)
+        new_customer = NewCustomer.objects.create(**validated_data)
         
         # Step 3: Return the NewCustomer instance, which is now attached to the user
         return new_customer

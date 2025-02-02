@@ -23,7 +23,10 @@ class NewCustomerViewSet(viewsets.ModelViewSet):
             return NewCustomer.objects.filter(user=user)  # Return only NewCustomer related to the logged-in user
         else:
             return NewCustomer.objects.none()  # If no authenticated user, return an empty queryset
-
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request  # Pass the request context to the serializer
+        return context
 
 class UnderwriterViewSet(viewsets.ModelViewSet):
     queryset = Underwriter.objects.all()
