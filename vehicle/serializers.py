@@ -5,6 +5,7 @@ class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Driver
         fields = [
+            'id',
             'vehicle', 
             'driver_firstname', 
             'driver_lastname', 

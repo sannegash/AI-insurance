@@ -13,7 +13,6 @@ class Policy(models.Model):
     ]
 
     policy_number = models.CharField(max_length=20, unique=True, help_text="Unique policy number.")
-    insured_name = models.CharField(max_length=100, help_text="Name of the insured individual or organization.")
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="policies", help_text="Vehicle covered by this policy.")
     policy_type = models.CharField(max_length=30, choices=POLICY_TYPE_CHOICES, help_text="Type of insurance policy.")
     coverage_start_date = models.DateField(help_text="Start date of the coverage.")

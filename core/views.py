@@ -70,7 +70,6 @@ class SignInView(APIView):
 
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
-        print("User authenticated, generating tokens...") 
         if user is not None:
             # Create JWT tokens (access and refresh)
             refresh = RefreshToken.for_user(user)

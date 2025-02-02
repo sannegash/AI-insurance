@@ -14,14 +14,16 @@ from core.models import User
 
 
 class NewCustomerViewSet(viewsets.ModelViewSet):
-    queryset = NewCustomer.objects.all()
     serializer_class = NewCustomerSerializer
+
     def get_queryset(self):
-        queryset = super().get_queryset()
+        # Filter the queryset based on the 'username' query parameter
+        queryset = NewCustomer.objects.all()
         username = self.request.query_params.get('username', None)
         if username:
-            queryset = queryset.filter(user__username__iexact=username)  # Filter based on username field of the User model
-        return queryset 
+            queryset = queryset.filter(user__username=username)  # Filter by the username from query params
+        return queryset
+
 class UnderwriterViewSet(viewsets.ModelViewSet):
     queryset = Underwriter.objects.all()
     serializer_class = UnderwriterSerializer
