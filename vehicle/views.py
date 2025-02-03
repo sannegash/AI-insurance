@@ -3,7 +3,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import viewsets
 from django.shortcuts import render
 from rest_framework import generics
-from .models import Vehicle, Driver 
+from .models import Vehicle, Driver
+from accounts.models import NewCustomer 
 from .serializers import VehicleSerializer, DriverSerializer
 
 class VehicleViewSet(viewsets.ModelViewSet):

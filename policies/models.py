@@ -12,7 +12,7 @@ class Policy(models.Model):
         ('Third-Party, Fire and Theft', 'Third-Party, Fire and Theft'),
     ]
 
-    policy_number = models.CharField(max_length=20, unique=True, help_text="Unique policy number.")
+    policy_number = models.CharField(max_length=20, unique=True, help_text="Unique policy number.", editable= False)
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="policies", help_text="Vehicle covered by this policy.")
     policy_type = models.CharField(max_length=30, choices=POLICY_TYPE_CHOICES, help_text="Type of insurance policy.")
     coverage_start_date = models.DateField(help_text="Start date of the coverage.")
