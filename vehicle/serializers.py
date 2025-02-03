@@ -14,8 +14,6 @@ class DriverSerializer(serializers.ModelSerializer):
 
 class VehicleSerializer(serializers.ModelSerializer):
     # Serializing drivers linked to the vehicle
-    driver = DriverSerializer( read_only=True)
-
     class Meta:
         model = Vehicle
         fields = [
@@ -29,7 +27,6 @@ class VehicleSerializer(serializers.ModelSerializer):
             'transmission_type', 
             'engine_capacity', 
             'color', 
-            'driver',  # Include related drivers in the serialized data
             'created_at', 
             'updated_at'
         ]
