@@ -5,15 +5,12 @@ class DriverSerializer(serializers.ModelSerializer):
     class Meta:
         model = Driver
         fields = [
-            'id',
-            'vehicle', 
             'driver_firstname', 
             'driver_lastname', 
             'licence_number'
         ]
 
 class VehicleSerializer(serializers.ModelSerializer):
-    # Serializing drivers linked to the vehicle
     class Meta:
         model = Vehicle
         fields = [
