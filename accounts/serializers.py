@@ -16,7 +16,7 @@ class NewCustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = NewCustomer
         fields = [ 'age','driving_experience', 'education', 'income',
-        'owner_name', 'phone_number', 'postal_code','city', 'state',
+        'owner_name', 'phone_number', 'postal_code','city', 'state','status',
         'married', 'children', 'traffic_violations', 'number_of_accidents',
         'created_at', ]    
     
