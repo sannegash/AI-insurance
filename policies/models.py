@@ -9,11 +9,11 @@ class Policy(models.Model):
     POLICY_TYPE_CHOICES = [
         ('Comprehensive', 'Comprehensive'),
         ('Third-Party', 'Third-Party'),
-        ('Third-Party, Fire and Theft', 'Third-Party, Fire and Theft'),
+        ('Fire and Theft', 'Fire and Theft'),
     ]
 
     policy_number = models.CharField(max_length=20, unique=True, help_text="Unique policy number.", editable= False)
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="policies", help_text="Vehicle covered by this policy.")
+    vehicle = models.OneToOneField(Vehicle, on_delete=models.CASCADE, related_name="policy", to_field='chassis_number', help_text="Vehicle covered by this policy.")
     policy_type = models.CharField(max_length=30, choices=POLICY_TYPE_CHOICES, help_text="Type of insurance policy.")
     coverage_start_date = models.DateField(help_text="Start date of the coverage.")
     coverage_end_date = models.DateField(help_text="End date of the coverage.")
@@ -25,7 +25,7 @@ class Policy(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Policy {self.policy_number} for {self.insured_name}"
+        return f"Policy {self.policy_number} for {self.vehicle.chassis_number}"
 
     def is_active(self):
         from datetime import date
