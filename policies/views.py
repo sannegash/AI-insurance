@@ -16,10 +16,25 @@ class PolicyViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer
 
-# ✅ Function to generate a unique policy number
-def generate_policy_number():
-    return uuid.uuid4().hex[:12].upper()  # 12-character unique code
+    def get_queryset(self):
+        # Get the logged-in user
+        user = self.request.user
+        
+        # Get the NewCustomer associated with the logged-in user
+        new_customer = user.newcustomer  # Assuming `newcustomer` is a OneToOneField on the User model
+        
+        # Filter policies where the vehicle's customer is the logged-in user's NewCustomer
+        return Policy.objects.filter(vehicle__customer=new_customer)
 
+    # Function to generate a unique policy number
+    @staticmethod
+    def generate_policy_number():
+        return uuid.uuid4().hex[:12].upper()  # 12-character unique code
+
+    def perform_create(self, serializer):
+        # Override the perform_create method to add the generated policy number before saving
+        policy_number = self.generate_policy_number()  # Generate a unique policy number
+        serializer.save(policy_number=policy_number)  # Save with the generated policy number
 class CustomerListView(View):
     def get(self, request):
         try:
