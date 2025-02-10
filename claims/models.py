@@ -25,14 +25,6 @@ class Claim(models.Model):
     police_report_number = models.CharField(max_length=50, blank=True,
                                             help_text="Police report reference, if applicable.")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pending')
-    claim_officer = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        related_name='handled_claims',
-        null=True,
-        blank=True,
-        help_text="The officer assigned to this claim."
-    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

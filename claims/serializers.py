@@ -6,13 +6,12 @@ from .models import Claim, Vehicle, User
 
 class ClaimSerializer(serializers.ModelSerializer):
     vehicle = serializers.PrimaryKeyRelatedField(queryset=Vehicle.objects.all())
-    claim_officer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = Claim
         fields = [
             'id', 'vehicle', 'claim_date', 'estimated_damage_cost', 'accident_date', 'accident_location', 
-            'description', 'settlement_amount', 'police_report_number', 'status', 'claim_officer', 
+            'description', 'settlement_amount', 'police_report_number', 'status',  
             'created_at', 'updated_at'
         ]
         read_only_fields = ['claim_date', 'created_at', 'updated_at']  # Fields that should not be modified directly

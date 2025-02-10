@@ -42,7 +42,7 @@ def update_claim(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = ClaimSerializer(claim, data=request.data)
+        serializer = ClaimSerializer(claim, data=request.data,partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
