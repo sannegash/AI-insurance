@@ -1,18 +1,18 @@
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from django.shortcuts import render
-from rest_framework import generics
+from rest_framework.exceptions import PermissionDenied
 from .models import Claim
 from .serializers import ClaimSerializer
-from rest_framework.permissions import IsAuthenticated
+
 
 class ClaimViewSet(viewsets.ModelViewSet):
-    """ viewset for managign claims."""
+    """ Viewset for managing claims """
     queryset = Claim.objects.all()
     serializer_class = ClaimSerializer
     permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         """
         Limit queryset based on user type:
@@ -45,40 +45,42 @@ class ClaimViewSet(viewsets.ModelViewSet):
 
         return serializer
 
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def verify_claim(request, claim_id):
-    """Allow underwriter to verify the claim and calculate estimated damage cost"""
+    """Allow underwriters to verify the claim and calculate estimated damage cost"""
     try:
         claim = Claim.objects.get(id=claim_id)
     except Claim.DoesNotExist:
         return Response({'error': 'Claim not found'}, status=status.HTTP_404_NOT_FOUND)
 
-    if not request.user.groups.filter(name='Underwriter').exists():  # Check underwriter role
+    if not request.user.groups.filter(name='Underwriter').exists():
         return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
 
     # Prevent modification if the claim is already approved or rejected
     if claim.status in ['Approved', 'Rejected']:
         return Response({'error': 'This claim has already been processed.'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Only allow updating certain fields
+    # Check and update the 'estimated_damage_cost' and 'description'
     estimated_damage_cost = request.data.get('estimated_damage_cost')
-    status = request.data.get('status', 'Approved')  # Default to Approved if not provided
+    description = request.data.get('description')
 
     if estimated_damage_cost is None:
         return Response({'error': 'Estimated damage cost is required'}, status=status.HTTP_400_BAD_REQUEST)
 
     claim.estimated_damage_cost = estimated_damage_cost
-    claim.status = status
+    if description:
+        claim.description = description
     claim.save()
 
     return Response({'message': 'Claim verified successfully'}, status=status.HTTP_200_OK)
 
+
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def approve_or_deny_claim(request, claim_id):
-    """Allow claim officer to approve or deny the underwriter's claim estimate"""
-
+    """Allow claim officers to approve or deny the underwriter's claim estimate"""
     try:
         claim = Claim.objects.get(id=claim_id)
     except Claim.DoesNotExist:
