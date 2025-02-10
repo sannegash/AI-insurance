@@ -26,10 +26,7 @@ class PolicyViewSet(viewsets.ModelViewSet):
         # Filter policies where the vehicle's customer is the logged-in user's NewCustomer
         return Policy.objects.filter(vehicle__customer=new_customer)
 
-    # Function to generate a unique policy number
-    @staticmethod
-    def generate_policy_number():
-        return uuid.uuid4().hex[:12].upper()  # 12-character unique code
+    # 12-character unique code
 
     def perform_create(self, serializer):
         # Override the perform_create method to add the generated policy number before saving
@@ -92,6 +89,12 @@ class CustomerListView(View):
             return JsonResponse({"error": str(e)}, status=400)
 
 class PolicyCreateView(View):
+    # Function to generate a unique policy number
+    @staticmethod
+    def generate_policy_number(vehicle_chassis_number):
+        # Use uuid5 with a namespace and the vehicle's chassis number as the name
+        return uuid.uuid5(uuid.NAMESPACE_DNS, vehicle_chassis_number).hex[:12].upper()
+
     def post(self, request):
         try:
             data = json.loads(request.body)
@@ -99,14 +102,13 @@ class PolicyCreateView(View):
             # Get the vehicle instance based on the vehicle_id sent in the request
             vehicle = get_object_or_404(Vehicle, chassis_number=data.get("vehicle"))
 
-
             # Get the associated customer (optional if not needed for creating the policy)
             customer = vehicle.customer  # Optional, if policy_holder is required
 
             with transaction.atomic():
                 # Create a new policy
                 policy = Policy.objects.create(
-                    policy_number=generate_policy_number(),
+                    policy_number=PolicyCreateView.generate_policy_number(vehicle.chassis_number),  # Updated line
                     vehicle=vehicle,
                     policy_type=data.get("policy_type"),
                     coverage_start_date=data.get("coverage_start_date"),
