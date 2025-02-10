@@ -15,7 +15,6 @@ class Claim(models.Model):
     ]
 
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name='claims')
-    claimant = models.ForeignKey(NewCustomer, on_delete=models.CASCADE, related_name='claims')
     claim_date = models.DateField(auto_now_add=True)
     estimated_damage_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     accident_date = models.DateField(help_text="Date of the accident.")

@@ -1,15 +1,10 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 from .models import Claim
-from .views import ClaimViewSet
 from . import views
-router = DefaultRouter()
-
-router.register(r'claim',ClaimViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
-    path('verify-claim/<int:claim_id>/', views.verify_claim, name='verify_claim'),
-    path('approve-or-deny-claim/<int:claim_id>/', views.approve_or_deny_claim, name='approve_or_deny_claim'),
+    path('claims/', views.create_claim, name='create_claim'),  # Create a new claim
+    path('claims/list/', views.get_claims, name='get_claims'),  # Get all claims
+    path('claims/<int:pk>/', views.update_claim, name='update_claim'),  # Get or update a specific claim
 ]
 

@@ -1,33 +1,28 @@
 from rest_framework import serializers
 from .models import Claim
+from vehicle.models import Vehicle
+from rest_framework import serializers
+from .models import Claim, Vehicle, User
 
 class ClaimSerializer(serializers.ModelSerializer):
+    vehicle = serializers.PrimaryKeyRelatedField(queryset=Vehicle.objects.all())
+    claim_officer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), required=False)
+
     class Meta:
         model = Claim
-        # Include all fields in the model, but control which are required
-        fields = ['vehicle', 'claimant', 'claim_date', 'accident_date', 'accident_location',
-                  'description', 'estimated_damage_cost', 'police_report_number', 'status', 'claim_officer', 
-                  'created_at', 'updated_at']
-        
-        # Specify which fields are required during claim creation
-        extra_kwargs = {
-            'accident_date': {'required': True},
-            'accident_location': {'required': True},
-            'police_report_number': {'required': True},
-            'claim_date': {'required': True},
-            'vehicle': {'required': True},
-            # Mark other fields as not required for creation
+        fields = [
+            'id', 'vehicle', 'claim_date', 'estimated_damage_cost', 'accident_date', 'accident_location', 
+            'description', 'settlement_amount', 'police_report_number', 'status', 'claim_officer', 
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['claim_date', 'created_at', 'updated_at']  # Fields that should not be modified directly
 
-            'description': {'required': False},
-            'estimated_damage_cost': {'required': False},
-            'status': {'required': False},
-            'claim_officer': {'required': False},
-            'created_at': {'required': False},
-            'updated_at': {'required': False},
-        }
+    def validate_vehicle(self, value):
+        if not value:
+            raise serializers.ValidationError("Vehicle field cannot be empty.")
+        return value
 
-    def validate(self, data):
-        """
-        You can add any additional validation if necessary here
-        """
-        return data
+    def validate_status(self, value):
+        if value not in dict(Claim.STATUS_CHOICES).keys():
+            raise serializers.ValidationError("Invalid status value.")
+        return value
