@@ -1,5 +1,5 @@
 from django.db import models
-from core.models import User 
+from vehicle.models import Vehicle 
 
 # Custom validator for claim likelihood
 def validate_claim_likelihood(value):
@@ -7,8 +7,8 @@ def validate_claim_likelihood(value):
         raise ValidationError("Claim likelihood must be between 0 and 100.")
 
 class RiskAssessment (models.Model):
-   insuredcustomer = models.ForeignKey(
-      User, on_delete=models.CASCADE, related_name="riskassessment"
+   vehicle = models.OneToOneField(
+      Vehicle, on_delete=models.CASCADE, related_name="riskassessment"
     )
    #Enum choices for risk_factor
    RISK_FACTORS = [ 
@@ -34,4 +34,4 @@ class RiskAssessment (models.Model):
    updated_at = models.DateTimeField(auto_now=True)
 
    def __str__(self):
-      return f"Risk Assessment for {self.user.username} - {self.policy_type}"
+      return f"Risk Assessment for {self.vehicle} - {self.risk_factor}"

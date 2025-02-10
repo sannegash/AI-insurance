@@ -9,21 +9,22 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import viewsets
 from .serializers import RiskAssessmentSerializer
-
+from vehicle.models import Vehicle
 
 class RiskAssessmentViewSet(viewsets.ModelViewSet):
     queryset = RiskAssessment.objects.all()
     serializer_class = RiskAssessmentSerializer
 
     @action(detail=True, methods=['post'])
-    def random_assess(self, request, pk=None):
+    def ai_prediction(self, request, pk=None):
         """
-        Randomly assigns a risk factor and claim likelihood to a customer
+        Randomly assigns a risk factor and claim likelihood to a vehicle.
         """
         try:
-            customer = NewCustomer.objects.get(id=pk)
-        except NewCustomer.DoesNotExist:
-            return Response({"error": "Customer not found."}, status=404)
+            # Fetch the vehicle by its primary key (pk)
+            vehicle = Vehicle.objects.get(id=pk)
+        except Vehicle.DoesNotExist:
+            return Response({"error": "Vehicle not found."}, status=404)
 
         # Randomly assign risk factor from available choices
         risk_factors = ['High', 'Medium', 'Low']
@@ -31,10 +32,11 @@ class RiskAssessmentViewSet(viewsets.ModelViewSet):
 
         # Randomly assign claim likelihood between 0 and 100 (percentage)
         claim_likelihood = round(random.uniform(0, 100), 2)  # Random float between 0 and 100, rounded to 2 decimal places
+        claim_likelihood = min(max(claim_likelihood, 0), 100)  # Random float between 0 and 100, rounded to 2 decimal places
 
-        # Create or update the RiskAssessment for the customer
+        # Create or update the RiskAssessment for the vehicle
         risk_assessment, created = RiskAssessment.objects.update_or_create(
-            insuredcustomer=customer,
+            vehicle=vehicle,  # Now referencing the vehicle
             defaults={
                 'risk_factor': risk_factor,
                 'claim_likelihood': claim_likelihood
