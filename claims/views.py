@@ -8,7 +8,7 @@ from .serializers import ClaimSerializer
 
 
 class ClaimViewSet(viewsets.ModelViewSet):
-    """ Viewset for managing claims """
+    """ Viewset for managing claims (Insured Customers only for creation) """
     queryset = Claim.objects.all()
     serializer_class = ClaimSerializer
     permission_classes = [IsAuthenticated]
@@ -25,26 +25,38 @@ class ClaimViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         """
-        Ensure that 'estimated_damage_cost' is excluded during claim creation.
+        Ensure that only insured customers can create claims.
         Associate the claim with the logged-in customer.
         """
+        if not self.request.user.groups.filter(name='Insured').exists():
+            raise PermissionDenied("You are not authorized to create claims.")
+
         serializer.save(claimant=self.request.user.newcustomer, estimated_damage_cost=None)
 
     def get_serializer(self, *args, **kwargs):
         """
         Dynamically adjust the serializer fields:
-        - Remove 'estimated_damage_cost' for insured customers.
+        - Remove 'estimated_damage_cost' and 'description' for insured customers.
         """
         serializer_class = self.get_serializer_class()
         kwargs['context'] = self.get_serializer_context()
         serializer = serializer_class(*args, **kwargs)
 
-        # Remove 'estimated_damage_cost' field for insured customers
+        # Remove 'estimated_damage_cost' and 'description' fields for insured customers
         if not self.request.user.groups.filter(name='Underwriter').exists():
             serializer.fields.pop('estimated_damage_cost', None)
+            serializer.fields.pop('description', None)
 
         return serializer
 
+    def create(self, request, *args, **kwargs):
+        """
+        Only Insured customers can create claims.
+        """
+        if not self.request.user.groups.filter(name='Insured').exists():
+            raise PermissionDenied("You are not authorized to create claims.")
+
+        return super().create(request, *args, **kwargs)
 
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])

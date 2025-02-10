@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import NewCustomer 
+from core.models import User 
 
 # Custom validator for claim likelihood
 def validate_claim_likelihood(value):
@@ -8,7 +8,7 @@ def validate_claim_likelihood(value):
 
 class RiskAssessment (models.Model):
    insuredcustomer = models.ForeignKey(
-       NewCustomer, on_delete=models.CASCADE, related_name="riskassessment"
+      User, on_delete=models.CASCADE, related_name="riskassessment"
     )
    #Enum choices for risk_factor
    RISK_FACTORS = [ 
