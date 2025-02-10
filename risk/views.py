@@ -46,3 +46,23 @@ class RiskAssessmentViewSet(viewsets.ModelViewSet):
         # Serialize and return the risk assessment
         serializer = RiskAssessmentSerializer(risk_assessment)
         return Response(serializer.data)
+    @action(detail=True, methods=['get'])
+    def retrieve_risk_assessment(self, request, pk=None):
+        """
+        Fetch the risk assessment for the vehicle.
+        """
+        try:
+            # Fetch the vehicle by its primary key (pk)
+            vehicle = Vehicle.objects.get(id=pk)
+        except Vehicle.DoesNotExist:
+            return Response({"error": "Vehicle not found."}, status=404)
+
+        # Fetch the associated risk assessment
+        try:
+            risk_assessment = RiskAssessment.objects.get(vehicle=vehicle)
+        except RiskAssessment.DoesNotExist:
+            return Response({"error": "Risk assessment not found for this vehicle."}, status=404)
+
+        # Serialize and return the risk assessment
+        serializer = RiskAssessmentSerializer(risk_assessment)
+        return Response(serializer.data)
