@@ -30,9 +30,8 @@ class RiskAssessmentViewSet(viewsets.ModelViewSet):
         risk_factors = ['High', 'Medium', 'Low']
         risk_factor = random.choice(risk_factors)
 
-        # Randomly assign claim likelihood between 0 and 100 (percentage)
-        claim_likelihood = round(random.uniform(0, 100), 2)  # Random float between 0 and 100, rounded to 2 decimal places
-        claim_likelihood = min(max(claim_likelihood, 0), 100)  # Random float between 0 and 100, rounded to 2 decimal places
+        # Randomly assign claim likelihood between 0.0 and 1.0
+        claim_likelihood = round(random.uniform(0.0, 1.0), 4)  # Rounded to 4 decimal places
 
         # Create or update the RiskAssessment for the vehicle
         risk_assessment, created = RiskAssessment.objects.update_or_create(
@@ -46,6 +45,7 @@ class RiskAssessmentViewSet(viewsets.ModelViewSet):
         # Serialize and return the risk assessment
         serializer = RiskAssessmentSerializer(risk_assessment)
         return Response(serializer.data)
+
     @action(detail=True, methods=['get'])
     def retrieve_risk_assessment(self, request, pk=None):
         """

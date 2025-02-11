@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment API Request</title>
+    <meta charset="UTF-8">
+    <meta name="owner" content="This Chapa-Payment-Integration Website Developed by Software Engineer Mr. Matyas Sina">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapa Payment Transfer</title>
 </head>
 <body>
-  <h1>Make Payment</h1>
-  <button id="make-payment-button">Make Payment</button>
-  <pre id="response-output"></pre>
+    <h1>Chapa Transfer</h1>
 
-  <script>
-    document.getElementById("make-payment-button").addEventListener("click", () => {
-      const url = "https://api.chapa.co/v1/transfers";
-      const payload = {
-        account_name: "Israel Goytom",
-        account_number: "32423423",
-        amount: "1",
-        currency: "ETB",
-        reference: "3241342142sfdd",
-        bank_code: 656
-      };
-      
-      const headers = {
-        'Authorization': 'Bearer CHAPUBK_TEST-uwf74g2tdYC7RMNF3F5RTcioNCtbOwKH',
-        'Content-Type': 'application/json'
-      };
+    <form id="transfer-form" method="POST" action="https://api.chapa.co/v1/transfers">
+        <input type="hidden" name="account_name" value="Israel Goytom" />
+        <input type="hidden" name="account_number" value="32423423" />
+        <input type="hidden" name="amount" value="1" />
+        <input type="hidden" name="currency" value="ETB" />
+        <input type="hidden" name="reference" value="3241342142sfdd" />
+        <input type="hidden" name="bank_code" value="656" />
+        
+        <!-- Authorization Header -->
+        <input type="hidden" name="authorization" value="Bearer CHAPUBK_TEST-uwf74g2tdYC7RMNF3F5RTcioNCtbOwKH" />
 
-      // Perform the POST request
-      fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(payload)
-      })
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById("response-output").textContent = JSON.stringify(data, null, 2);
-      })
-      .catch(error => {
-        document.getElementById("response-output").textContent = "Error: " + error;
-      });
-    });
-  </script>
+        <button type="button" onclick="submitTransfer()">Transfer Now</button>
+    </form>
+
+    <script type="text/javascript">
+        function submitTransfer() {
+            // Optionally, you can generate or modify transfer values here
+            console.log("Preparing transfer...");
+
+            // Submit the transfer form
+            document.getElementById("transfer-form").submit();
+        }
+    </script>
 </body>
 </html>
+
