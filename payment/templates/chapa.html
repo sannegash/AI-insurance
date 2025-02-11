@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="owner" content="This Chapa-Payment-Integration Website Developed by Software Engineer Mr. Matyas Sina">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapa Payment</title>
+</head>
+<body>
+    <h1>Chapa</h1>
+    <form method="POST" action="https://api.chapa.co/v1/hosted/pay" target="_blank" >
+        <input type="hidden" name="public_key" value="CHAPUBK_TEST-uwf74g2tdYC7RMNF3F5RTcioNCtbOwKH" />
+        <input type="hidden" name="tx_ref" id="tx_ref" value="uniqueid" />
+        <input type="hidden" name="amount" value="{{amount}}" />
+        <input type="hidden" name="currency" value="ETB" />
+        <input type="email" name="email" placeholder="Enter Your Email" required/>
+        <input type="text" name="first_name" placeholder="Enter Your first Name" required />
+        <input type="text" name="last_name" placeholder="Enter Your last Name" required />
+        <input type="hidden" name="title" value="Let us do this" />
+        <input type="hidden" name="description" value="Paying with Confidence with cha" />
+        <input type="hidden" name="logo" value="https://chapa.link/asset/images/chapa_swirl.svg" />
+        <input type="hidden" name="callback_url" value="http://127.0.0.1:8000/" />
+        <input type="hidden" name="return_url" value="http://127.0.0.1:8000/next/" />
+        <input type="hidden" name="meta[title]" value="test" />
+        <button type="submit" onclick="call()">Pay Now</button>
+    </form>
+
+    <script type="text/javascript">
+        var unique = document.getElementById('tx_ref')
+        function call() {
+            var uniqueid = "negade-tx-" + Math.random().toString(16).slice(2)
+            console.log(uniqueid)
+            unique.value = uniqueid
+        }
+    </script>
+</body>
+</html>
