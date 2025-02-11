@@ -8,3 +8,5 @@ import uuid
 
 def home(request):
     return render(request,'chapa.html')
+def transfer(requets):
+    return render(request,'transfer.html')

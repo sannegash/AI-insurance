@@ -1,5 +1,8 @@
 from django.urls import path
-from .views import home
+from .views import home, transfer
+from . import views
+
 urlpatterns = [
-    path('', home, name='home'),
+    path('', views.home, name='home'),
+    path('transfer/', views.transfer, name='transfer')
 ]

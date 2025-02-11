@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment API Request</title>
+</head>
+<body>
+  <h1>Make Payment</h1>
+  <button id="make-payment-button">Make Payment</button>
+  <pre id="response-output"></pre>
+
+  <script>
+    document.getElementById("make-payment-button").addEventListener("click", () => {
+      const url = "https://api.chapa.co/v1/transfers";
+      const payload = {
+        account_name: "Israel Goytom",
+        account_number: "32423423",
+        amount: "1",
+        currency: "ETB",
+        reference: "3241342142sfdd",
+        bank_code: 656
+      };
+      
+      const headers = {
+        'Authorization': 'Bearer CHAPUBK_TEST-uwf74g2tdYC7RMNF3F5RTcioNCtbOwKH',
+        'Content-Type': 'application/json'
+      };
+
+      // Perform the POST request
+      fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(payload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("response-output").textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById("response-output").textContent = "Error: " + error;
+      });
+    });
+  </script>
+</body>
+</html>
